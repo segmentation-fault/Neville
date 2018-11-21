@@ -42,6 +42,8 @@ for i=1:p
 end
 
 %Plot
+figure;
 plot(0:p,df,'rx:',0:p,Fv,'b+--');
 legend({'Neville','Symbolic'});
 xlabel('order of derivative')
+title(['Derivatives in 0 of $$f(t) = ' latex(F) '$$'],'interpreter','latex')
