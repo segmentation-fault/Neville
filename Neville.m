@@ -21,6 +21,7 @@ classdef Neville
     end
     methods
         function obj = Neville(varargin)
+            %Call the constructor with false if you want ot use VPA
             obj.toDouble = 1;
             if numel(varargin)
                 obj.toDouble = varargin{1};
@@ -96,7 +97,7 @@ classdef Neville
                 r = 1;
                 for s=0:p
                     if r
-                        r = abs(obj.at(C,k-s)-obj.at(df,s)) <= eps*abs(obj.at(C,k-s));
+                        r = double(abs(obj.at(C,k-s)-obj.at(df,s)) <= eps*abs(obj.at(C,k-s)));
                     end
                     df(obj.idx(s)) = obj.at(C,k-s);
                 end

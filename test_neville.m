@@ -21,6 +21,8 @@ clear
 close all
 reset(symengine)
 
+tic
+
 syms t real;
 
 nPoints = 100; %100 points around 0
@@ -33,8 +35,10 @@ f = matlabFunction(F);
 
 %Calculating the derivative numerically
 N = Neville();
+N.toDouble = false; %Using VPA
 [df, succ] = N.deriveAt(p,f,x,1e-6,linspace(-0.1,0.1,nPoints));
-% [df, succ]=N.dip(p,nPoints-1,f,linspace(-0.1,0.1,nPoints),1e-6);
+N.toDouble = true; %Not using VPA
+[df1, succ1] = N.deriveAt(p,f,x,1e-6,linspace(-0.1,0.1,nPoints));
 
 %Symbolical derivation at x
 Fv = sym.empty(0,p+1);
@@ -45,7 +49,13 @@ end
 
 %Plot
 figure;
-plot(0:p,df,'rx:',0:p,Fv,'b+--');
-legend({'Neville','Symbolic'});
+plot(0:p,df,'rx:',0:p,df1,'k*-.',0:p,Fv,'b+--');
+legend({'Neville (VPA)','Neville (no VPA)','Symbolic'});
 xlabel('order of derivative')
 title(['Derivatives in t = ' num2str(x) ' of $$f(t) = ' latex(F) '$$'],'interpreter','latex')
+
+elapsedTime = toc;
+s = seconds(elapsedTime);
+s.Format = 'hh:mm:ss.SSS';
+disp('Elapsed time (hms): ');
+disp(s);
