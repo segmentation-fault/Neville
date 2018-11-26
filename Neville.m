@@ -4,12 +4,12 @@
 %     it under the terms of the GNU General Public License as published by
 %     the Free Software Foundation, either version 3 of the License, or
 %     (at your option) any later version.
-% 
+%
 %     This program is distributed in the hope that it will be useful,
 %     but WITHOUT ANY WARRANTY; without even the implied warranty of
 %     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 %     GNU General Public License for more details.
-% 
+%
 %     You should have received a copy of the GNU General Public License
 %     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -17,7 +17,7 @@ classdef Neville
     %Neville: class based on J. N. Lyness and C. B. Moler, “Van der monde systems and numerical
     %differentiation,” Numerische Mathematik, vol. 8, pp. 458–464, Aug 1966.
     properties
-      toDouble;
+        toDouble;
     end
     methods
         function obj = Neville(varargin)
@@ -107,6 +107,18 @@ classdef Neville
             for s=1:p
                 df(obj.idx(s)) = factorial(s)*obj.at(df,s);
             end
-        end        
-    end    
+        end
+        
+        function [df, r] = deriveAt(obj,p,f,x,eps,intrv)
+            %Helper function that derives f p times in x with desired tolerance eps
+            %around the interval intrv. Intrv is an interval around 0, the
+            %function will take care of the shifting.
+            % df = array of derivatives at 0
+            % r = exit flag
+            
+            fun = @(t) f(t+x);
+            nPoints = numel(intrv);
+            [df, r] = dip(obj,p,nPoints-1,fun,intrv,eps);            
+        end
+    end
 end
